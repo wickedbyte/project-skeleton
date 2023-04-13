@@ -2,11 +2,10 @@ services:
   php82:
     build:
       tags:
-        - wickedbyte/project-skeleton-php82
+        - wickedbyte/project-skeleton:php82
       context: ./
       dockerfile: Dockerfile
       target: php82
-      pull: true
     shm_size: '1gb'
     tmpfs:
       - /tmp
@@ -26,7 +25,7 @@ services:
       service: php82
     build:
       tags:
-       - wickedbyte/project-skeleton-php82-xdebug
+       - wickedbyte/project-skeleton:php82-xdebug
       target: php82-xdebug
     environment:
       PHP_IDE_CONFIG: "serverName=cli"
@@ -38,5 +37,5 @@ services:
       service: php82
     build:
       tags:
-       - wickedbyte/project-skeleton-php82-pcov
+       - wickedbyte/project-skeleton:php82-pcov
       target: php82-pcov
