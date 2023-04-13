@@ -5,13 +5,17 @@ dcrx = docker compose run --rm php82-xdebug
 
 .PHONY: build
 build:
-	@docker pull wickedbyte/project-skeleton:php82
-	@docker pull wickedbyte/project-skeleton:php82-xdebug
-	@docker pull wickedbyte/project-skeleton:php82-pcov
-	@docker compose build
+	@docker compose build --pull
 	@docker push wickedbyte/project-skeleton:php82
 	@docker push wickedbyte/project-skeleton:php82-xdebug
 	@docker push wickedbyte/project-skeleton:php82-pcov
+	@$(dcr) composer install
+
+.PHONY: pull
+pull:
+	@docker pull wickedbyte/project-skeleton:php82
+	@docker pull wickedbyte/project-skeleton:php82-xdebug
+	@docker pull wickedbyte/project-skeleton:php82-pcov
 	@$(dcr) composer install
 
 .PHONY: clean
