@@ -1,8 +1,6 @@
 services:
   php82:
     build:
-      tags:
-        - wickedbyte/project-skeleton:php82
       context: ./
       dockerfile: Dockerfile
       target: php82
@@ -24,8 +22,6 @@ services:
     extends:
       service: php82
     build:
-      tags:
-       - wickedbyte/project-skeleton:php82-xdebug
       target: php82-xdebug
     environment:
       PHP_IDE_CONFIG: "serverName=cli"
@@ -36,6 +32,4 @@ services:
     extends:
       service: php82
     build:
-      tags:
-       - wickedbyte/project-skeleton:php82-pcov
       target: php82-pcov
