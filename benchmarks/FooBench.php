@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace WickedByte\Benchmarks\Foo;
+namespace WickedByte\Benchmarks\App;
 
 use PhpBench\Attributes\Iterations;
 use PhpBench\Attributes\Revs;
 use PhpBench\Attributes\Subject;
-use WickedByte\Foo\Foo;
+use WickedByte\App\Foo;
 
 #[Revs(100_000)]
 #[Iterations(5)]

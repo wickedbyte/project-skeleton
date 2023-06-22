@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace WickedByte\Tests\Foo;
+namespace WickedByte\Tests\App;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use WickedByte\Foo\Foo;
+use WickedByte\App\Foo;
 
 #[CoversClass(Foo::class)]
 class FooTest extends TestCase

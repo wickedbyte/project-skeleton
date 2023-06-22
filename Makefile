@@ -1,52 +1,60 @@
 SHELL := bash
 
-dcr = docker compose run --rm php82
-dcrx = docker compose run --rm php82-xdebug
+php = docker compose run --rm php
+php_xdebug = docker compose run --rm php-xdebug
+composer = $(php) composer
+composer_xdebug = $(php-xdebug) composer
 
-.PHONY: build
-build:
+build: .env
 	@docker compose build --pull
-	@$(dcr) composer install
+	@$(composer) install
+	@$(php) mkdir build
+
+.env:
+	@$(dcr) cp .env.example .env
 
 .PHONY: clean
 clean:
-	@$(dcr) rm -rf ./.phpbench
-	@$(dcr) rm -rf ./.tmp
-	@$(dcr) rm -rf ./vendor
+	@$(php) rm -rf ./.phpbench ./.tmp ./build ./vendor
 
 .PHONY: shell
 shell:
-	@$(dcr) bash
-
-.PHONY: composer
-composer:
-	@$(dcr) composer install
+	@$(php) bash
 
 .PHONY: phpunit
 phpunit:
-	@$(dcr) vendor/bin/phpunit
+	@$(composer) phpunit
 
 .PHONY: phpbench
 phpbench:
-	@$(dcr) vendor/bin/phpbench run --report=aggregate
+	@$(composer) phpunit
 
 .PHONY: psysh
 psysh:
-	@$(dcrx) vendor/bin/psysh
+	@$(composer_xdebug) phpunit
 
 .PHONY: phpcs
 phpcs:
-	@$(dcr) vendor/bin/phpcs
+	@$(composer) phpcs
 
-.PHONY: phpcs
+.PHONY: phpcbf
 phpcbf:
-	@$(dcr) vendor/bin/phpcbf
+	@$(composer) phpcbf
 
 .PHONY: phpstan
 phpstan:
-	@$(dcr) vendor/bin/phpstan
+	@$(composer) phpstan
 
-.PHONY: phpstan
+.PHONY: rector
 rector:
-	@$(dcr) vendor/bin/rector process
-	@$(dcr) vendor/bin/phpcbf
+	@$(composer) rector
+	@$(composer) phpcbf
+
+.PHONY: ci
+ci:
+	@$(composer) ci
+
+.PHONY: update
+update:
+	@$(composer) update -W
+	@$(composer) bump

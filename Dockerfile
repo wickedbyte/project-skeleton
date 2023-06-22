@@ -24,13 +24,9 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-install -j$(nproc) bcmath gmp intl opcache zip
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 
-FROM base as php82
+FROM base as php
 USER dev
 
-FROM base as php82-xdebug
+FROM base as php-xdebug
 RUN pecl install xdebug && docker-php-ext-enable xdebug
-USER dev
-
-FROM base as php82-pcov
-RUN pecl install pcov && docker-php-ext-enable pcov
 USER dev

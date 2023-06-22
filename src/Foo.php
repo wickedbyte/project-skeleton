@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WickedByte\Foo;
+namespace WickedByte\App;
 
 class Foo
 {

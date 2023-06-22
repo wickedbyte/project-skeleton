@@ -3,28 +3,28 @@
     "description": "Template for PHP Projects",
     "type": "project",
     "require": {
-        "php": "^8.2"
+        "php": "^8.2",
+        "symfony/console": "^6.3"
     },
     "require-dev": {
-        "phpbench/phpbench": "^1.2",
-        "phpstan/phpstan": "^1",
-        "phpunit/phpunit": "^10",
-        "psy/psysh": "^0.11",
-        "squizlabs/php_codesniffer": "^3",
-        "symfony/console": "^6",
-        "slevomat/coding-standard": "^8.10",
-        "rector/rector": "^0.15.24"
+        "phpbench/phpbench": "^1.2.10",
+        "phpstan/phpstan": "^1.10.21",
+        "phpunit/phpunit": "^10.2.2",
+        "psy/psysh": "^0.11.18",
+        "squizlabs/php_codesniffer": "^3.7.2",
+        "slevomat/coding-standard": "^8.12.1",
+        "rector/rector": "^0.15.25"
     },
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "WickedByte\\Foo\\": "src/"
+            "WickedByte\\App\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "WickedByte\\Benchmarks\\Foo\\": "benchmarks/",
-            "WickedByte\\Tests\\Foo\\": "tests/"
+            "WickedByte\\Benchmarks\\App\\": "benchmarks/",
+            "WickedByte\\Tests\\App\\": "tests/"
         }
     },
     "authors": [
@@ -37,5 +37,22 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": false
         }
+    },
+    "scripts": {
+        "phpbench": "php vendor/bin/phpbench run --report=aggregate",
+        "phpcbf": "php vendor/bin/phpcbf --parallel=$(nproc) --report=full",
+        "phpcs": "php vendor/bin/phpcs --parallel=$(nproc) --report=full",
+        "phpstan": "php vendor/bin/phpstan analyze --memory-limit=-1",
+        "phpunit": "php vendor/bin/phpunit",
+        "psysh": "vendor/bin/psysh",
+        "rector": [
+            "php vendor/bin/rector process",
+            "@phpcbf"
+        ],
+        "ci": [
+            "@phpcs",
+            "@phpstan",
+            "php vendor/bin/rector process --dry-run"
+        ]
     }
 }

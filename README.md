@@ -1,1 +1,1 @@
-# PHP Project Skeleton
+# PHP Project Skeleton (CLI)

@@ -8,6 +8,7 @@
     <arg name="colors"/>
     <arg value="sp"/>
     <ini name="memory_limit" value="1G"/>
+    <file>app</file>
     <file>benchmarks/</file>
     <file>src/</file>
     <file>tests/</file>
