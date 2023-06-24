@@ -11,7 +11,7 @@ build: .env
 	@$(php) mkdir build
 
 .env:
-	@$(dcr) cp .env.example .env
+	@$(dcr) cp .env.DIST .env
 
 .PHONY: clean
 clean:
