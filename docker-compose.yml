@@ -14,6 +14,9 @@ services:
       - type: bind
         source: ./settings.ini
         target: /usr/local/etc/php/conf.d/settings.ini
+      - type: volume
+        source: composer-cache
+        target: /home/dev/.composer
       - type: tmpfs
         target: /tmp
     user: dev
@@ -29,4 +32,4 @@ services:
       XDEBUG_MODE: "${XDEBUG_MODE:-develop,debug}"
 
 volumes:
-  tempfiles:
+  composer-cache:

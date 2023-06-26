@@ -11,11 +11,11 @@ build: .env
 	@$(php) mkdir build
 
 .env:
-	@$(dcr) cp .env.DIST .env
+	@cp .env.DIST .env
 
 .PHONY: clean
 clean:
-	@$(php) rm -rf ./.phpbench ./.tmp ./build ./vendor
+	@rm -rf ./.phpbench ./.tmp ./build ./vendor
 
 .PHONY: shell
 shell:
@@ -27,11 +27,11 @@ phpunit:
 
 .PHONY: phpbench
 phpbench:
-	@$(composer) phpunit
+	@$(composer) phpbench
 
 .PHONY: psysh
 psysh:
-	@$(composer_xdebug) phpunit
+	@$(composer_xdebug) psysh
 
 .PHONY: phpcs
 phpcs:

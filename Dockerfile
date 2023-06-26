@@ -20,9 +20,11 @@ RUN apt-get update && apt-get install -y \
     zip \
     zlib1g-dev \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
 RUN docker-php-ext-install -j$(nproc) bcmath gmp intl opcache zip
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
+RUN mkdir -p "/home/dev/.composer" \
+    && chown -R "dev:dev" "/home/dev/.composer"
 
 FROM base as php
 USER dev
