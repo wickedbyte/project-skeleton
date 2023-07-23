@@ -3,7 +3,7 @@ SHELL := bash
 php = docker compose run --rm php
 php_xdebug = docker compose run --rm php-xdebug
 composer = $(php) composer
-composer_xdebug = $(php-xdebug) composer
+composer_xdebug = $(php_xdebug) composer
 
 build: .env
 	@docker compose build --pull
