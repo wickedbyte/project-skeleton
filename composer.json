@@ -4,16 +4,16 @@
     "type": "project",
     "require": {
         "php": "^8.2",
-        "symfony/console": "^6.3"
+        "symfony/console": "^6.3.4"
     },
     "require-dev": {
-        "phpbench/phpbench": "^1.2.10",
-        "phpstan/phpstan": "^1.10.21",
-        "phpunit/phpunit": "^10.2.2",
-        "psy/psysh": "^0.11.18",
+        "phpbench/phpbench": "^1.2.14",
+        "phpstan/phpstan": "^1.10.40",
+        "phpunit/phpunit": "^10.4.2",
+        "psy/psysh": "^0.11.22",
         "squizlabs/php_codesniffer": "^3.7.2",
-        "slevomat/coding-standard": "^8.12.1",
-        "rector/rector": "^0.15.25"
+        "slevomat/coding-standard": "^8.14.1",
+        "rector/rector": "^0.18"
     },
     "license": "MIT",
     "autoload": {
