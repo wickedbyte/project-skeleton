@@ -14,7 +14,7 @@ use WickedByte\App\Foo;
 class FooBench
 {
     #[Subject]
-    public function how_fast_is_42(): void
+    public function howFastIs42(): void
     {
         Foo::bar();
     }

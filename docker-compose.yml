@@ -1,10 +1,9 @@
 services:
-  php:
+  app:
     build:
       context: ./
       dockerfile: Dockerfile
       target: php
-    shm_size: '1gb'
     volumes:
       - type: bind
         source: ./
@@ -14,22 +13,6 @@ services:
       - type: bind
         source: ./settings.ini
         target: /usr/local/etc/php/conf.d/settings.ini
-      - type: volume
-        source: composer-cache
-        target: /home/dev/.composer
       - type: tmpfs
         target: /tmp
     user: dev
-
-  php-xdebug:
-    extends:
-      service: php
-    build:
-      target: php-xdebug
-    environment:
-      PHP_IDE_CONFIG: "serverName=cli"
-      XDEBUG_CONFIG: "client_host=${CLIENT_HOST:-172.20.0.1} start_with_request=trigger idekey=${IDEKEY:-PHPSTORM}"
-      XDEBUG_MODE: "${XDEBUG_MODE:-develop,debug}"
-
-volumes:
-  composer-cache:

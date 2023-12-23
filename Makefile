@@ -1,60 +1,67 @@
 SHELL := bash
 
-php = docker compose run --rm php
-php_xdebug = docker compose run --rm php-xdebug
-composer = $(php) composer
-composer_xdebug = $(php_xdebug) composer
+app = docker compose run --rm app
 
-build: .env
+build:
 	@docker compose build --pull
-	@$(composer) install
-	@$(php) mkdir build
-
-.env:
-	@cp .env.DIST .env
-
-.PHONY: clean
-clean:
-	@rm -rf ./.phpbench ./.tmp ./build ./vendor
-
-.PHONY: shell
-shell:
-	@$(php) bash
-
-.PHONY: phpunit
-phpunit:
-	@$(composer) phpunit
-
-.PHONY: phpbench
-phpbench:
-	@$(composer) phpbench
-
-.PHONY: psysh
-psysh:
-	@$(composer_xdebug) psysh
-
-.PHONY: phpcs
-phpcs:
-	@$(composer) phpcs
-
-.PHONY: phpcbf
-phpcbf:
-	@$(composer) phpcbf
-
-.PHONY: phpstan
-phpstan:
-	@$(composer) phpstan
-
-.PHONY: rector
-rector:
-	@$(composer) rector
-	@$(composer) phpcbf
-
-.PHONY: ci
-ci:
-	@$(composer) ci
+	@$(app) mkdir -p build
+	@$(app) composer install
 
 .PHONY: update
 update:
-	@$(composer) update -W
-	@$(composer) bump
+	@$(app) composer update --with-all-dependencies
+	@$(app) composer bump
+
+.PHONY: upgrade
+upgrade:
+	@$(app) composer require --dev --update-with-all-dependencies \
+		phpbench/phpbench \
+		phpstan/phpstan \
+		phpunit/phpunit \
+		psy/psysh \
+		squizlabs/php_codesniffer \
+		slevomat/coding-standard \
+		rector/rector
+	@$(app) composer require --update-with-all-dependencies \
+		symfony/console
+	@$(app) app composer bump
+
+.PHONY: clean
+clean:
+	@rm -rf ./build ./vendor
+
+.PHONY: bash
+bash:
+	@$(app) bash
+
+.PHONY: phpunit
+phpunit:
+	@$(app) composer phpunit
+
+.PHONY: phpbench
+phpbench:
+	@$(app) composer phpbench
+
+.PHONY: psysh
+psysh:
+	@$(app) composer psysh
+
+.PHONY: phpcs
+phpcs:
+	@$(app) composer phpcs
+
+.PHONY: phpcbf
+phpcbf:
+	@$(app) composer phpcbf
+
+.PHONY: phpstan
+phpstan:
+	@$(app) composer phpstan
+
+.PHONY: rector
+rector:
+	@$(app) composer rector
+
+.PHONY: ci
+ci:
+	@$(app) composer ci

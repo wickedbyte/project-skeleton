@@ -13,7 +13,7 @@ use WickedByte\App\Foo;
 class FooTest extends TestCase
 {
     #[Test]
-    public function bar_returns_42(): void
+    public function barReturns42(): void
     {
         self::assertSame(42, Foo::bar());
     }

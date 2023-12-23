@@ -2,20 +2,32 @@
     "name": "wickedbyte/project-skeleton",
     "description": "Template for PHP Projects",
     "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andy Snell",
+            "email": "andy@wickedbyte.com"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": false
+        },
+        "sort-packages": true
+    },
     "require": {
         "php": "^8.2",
-        "symfony/console": "^6.3.4"
+        "symfony/console": "^7.0.1"
     },
     "require-dev": {
-        "phpbench/phpbench": "^1.2.14",
-        "phpstan/phpstan": "^1.10.40",
-        "phpunit/phpunit": "^10.4.2",
-        "psy/psysh": "^0.11.22",
-        "squizlabs/php_codesniffer": "^3.7.2",
+        "phpbench/phpbench": "^1.2.15",
+        "phpstan/phpstan": "^1.10.50",
+        "phpunit/phpunit": "^10.5.3",
+        "psy/psysh": "^0.12.0",
+        "rector/rector": "^0.18.13",
         "slevomat/coding-standard": "^8.14.1",
-        "rector/rector": "^0.18"
+        "squizlabs/php_codesniffer": "^3.8"
     },
-    "license": "MIT",
     "autoload": {
         "psr-4": {
             "WickedByte\\App\\": "src/"
@@ -27,30 +39,17 @@
             "WickedByte\\Tests\\App\\": "tests/"
         }
     },
-    "authors": [
-        {
-            "name": "Andy Snell",
-            "email": "andy@wickedbyte.com"
-        }
-    ],
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": false
-        }
-    },
     "scripts": {
         "phpbench": "php vendor/bin/phpbench run --report=aggregate",
         "phpcbf": "php vendor/bin/phpcbf --parallel=$(nproc) --report=full",
         "phpcs": "php vendor/bin/phpcs --parallel=$(nproc) --report=full",
         "phpstan": "php vendor/bin/phpstan analyze --memory-limit=-1",
-        "phpunit": "php vendor/bin/phpunit",
+        "phpunit": "XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-text",
         "psysh": "vendor/bin/psysh",
-        "rector": [
-            "php vendor/bin/rector process",
-            "@phpcbf"
-        ],
+        "rector": "php vendor/bin/rector process",
         "ci": [
             "@phpcs",
+            "@phpunit",
             "@phpstan",
             "php vendor/bin/rector process --dry-run"
         ]
