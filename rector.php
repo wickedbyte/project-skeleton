@@ -23,7 +23,7 @@ return static function (RectorConfig $config): void {
     ]);
 
     $config->sets([
-        LevelSetList::UP_TO_PHP_82,
+        LevelSetList::UP_TO_PHP_83,
         SetList::TYPE_DECLARATION,
         SetList::CODE_QUALITY,
         SetList::CODING_STYLE,

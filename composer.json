@@ -16,7 +16,7 @@
         "sort-packages": true
     },
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "symfony/console": "^7.0.1"
     },
     "require-dev": {

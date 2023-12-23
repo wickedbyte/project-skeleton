@@ -7,13 +7,17 @@ build:
 	@$(app) mkdir -p build
 	@$(app) composer install
 
+.PHONY: clean
+clean:
+	@rm -rf ./build ./vendor
+
 .PHONY: update
-update:
+update: build
 	@$(app) composer update --with-all-dependencies
 	@$(app) composer bump
 
 .PHONY: upgrade
-upgrade:
+upgrade: build
 	@$(app) composer require --dev --update-with-all-dependencies \
 		phpbench/phpbench \
 		phpstan/phpstan \
@@ -26,42 +30,38 @@ upgrade:
 		symfony/console
 	@$(app) app composer bump
 
-.PHONY: clean
-clean:
-	@rm -rf ./build ./vendor
-
 .PHONY: bash
-bash:
+bash: build
 	@$(app) bash
 
 .PHONY: phpunit
-phpunit:
+phpunit: build
 	@$(app) composer phpunit
 
 .PHONY: phpbench
-phpbench:
+phpbench: build
 	@$(app) composer phpbench
 
 .PHONY: psysh
-psysh:
+psysh: build
 	@$(app) composer psysh
 
 .PHONY: phpcs
-phpcs:
+phpcs: build
 	@$(app) composer phpcs
 
 .PHONY: phpcbf
-phpcbf:
+phpcbf: build
 	@$(app) composer phpcbf
 
 .PHONY: phpstan
-phpstan:
+phpstan: build
 	@$(app) composer phpstan
 
 .PHONY: rector
-rector:
+rector: build
 	@$(app) composer rector
 
 .PHONY: ci
-ci:
+ci: build
 	@$(app) composer ci

@@ -1,22 +1,25 @@
 # PHP Project Skeleton (CLI)
 
-### Setup
+Run `make` to build the project Docker image, create the "./build" cache directory
+and install vendor dependencies with Composer.
+
+To upgrade the project dependencies to their current major versions, run `make upgrade`, or
+to just update them within the bounds of their currently defined constraints, run `make update`
+
+Common Actions with Makefile targets:
+ - `make bash`
+ - `make phpunit`
+ - `make phpbench`
+ - `make psysh`
+ - `make phpcs`
+ - `make phpstan`
+ - `make rector`
+ - `make ci`
+
+To get a fresh start, run `make clean` to delete the vendor and build directories,
+which will trigger a docker image rebuild, the next time `make` or `make build` is run.
+
+For anything else not defined in the Makefile, use:
 ```shell
-
-```
-
-```shell
- docker compose run --rm -it app composer require --dev --update-with-all-dependencies \
-  phpbench/phpbench \
-  phpstan/phpstan \
-  phpunit/phpunit \
-  psy/psysh \
-  squizlabs/php_codesniffer \
-  slevomat/coding-standard \
-  rector/rector
-
-  docker compose run --rm -it app composer require --update-with-all-dependencies symfony/console
-
-  docker compose run --rm -it app composer bump
-
+docker compose run --rm -it app {your-command-here}
 ```
