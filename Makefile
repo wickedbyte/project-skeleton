@@ -19,7 +19,6 @@ update: build
 .PHONY: upgrade
 upgrade: build
 	@$(app) composer require --dev --update-with-all-dependencies \
-		phpbench/phpbench \
 		phpstan/phpstan \
 		phpunit/phpunit \
 		psy/psysh \
@@ -37,10 +36,6 @@ bash: build
 .PHONY: phpunit
 phpunit: build
 	@$(app) composer phpunit
-
-.PHONY: phpbench
-phpbench: build
-	@$(app) composer phpbench
 
 .PHONY: psysh
 psysh: build

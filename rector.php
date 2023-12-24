@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Rector\CodeQuality\Rector\Expression\InlineIfToExplicitIfRector;
 use Rector\Config\RectorConfig;
+use Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\AddSeeTestAnnotationRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
 use Rector\PHPUnit\Set\PHPUnitLevelSetList;
@@ -17,7 +19,6 @@ return static function (RectorConfig $config): void {
 
     $config->importShortClasses(false);
     $config->paths([
-        __DIR__ . '/benchmarks',
         __DIR__ . '/src',
         __DIR__ . '/tests',
     ]);
@@ -35,5 +36,7 @@ return static function (RectorConfig $config): void {
     $config->skip([
         PreferPHPUnitThisCallRector::class,
         AddSeeTestAnnotationRector::class,
+        InlineIfToExplicitIfRector::class,
+        AddLiteralSeparatorToNumberRector::class,
     ]);
 };

@@ -8,12 +8,14 @@
     <arg value="sp"/>
     <ini name="memory_limit" value="1G"/>
     <file>app</file>
-    <file>benchmarks/</file>
     <file>src/</file>
     <file>tests/</file>
     <file>.psysh.php</file>
     <file>rector.php</file>
-    <rule ref="PSR12" />
+    <rule ref="PSR12">
+        <!-- Temporarily Exclude "ClassConstantNotUpperCase" Until PHPCS Catches Up to PHP 8.3 -->
+        <exclude name="Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase"/>
+    </rule>
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
     <rule ref="Generic.Formatting.NoSpaceAfterCast"/>
     <rule ref="Generic.Formatting.SpaceAfterNot"/>

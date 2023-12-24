@@ -9,7 +9,6 @@ to just update them within the bounds of their currently defined constraints, ru
 Common Actions with Makefile targets:
  - `make bash`
  - `make phpunit`
- - `make phpbench`
  - `make psysh`
  - `make phpcs`
  - `make phpstan`
