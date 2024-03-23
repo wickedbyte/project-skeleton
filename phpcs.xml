@@ -2,6 +2,7 @@
 
 <ruleset name="WickedByte Coding Standard">
     <config name="installed_paths" value="../../slevomat/coding-standard"/>
+    <arg name="cache" value="build/phpcs"/>
     <arg name="report" value="full"/>
     <arg name="extensions" value="php"/>
     <arg name="colors"/>

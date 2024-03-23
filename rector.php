@@ -2,41 +2,25 @@
 
 declare(strict_types=1);
 
-use Rector\CodeQuality\Rector\Expression\InlineIfToExplicitIfRector;
+use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
 use Rector\Config\RectorConfig;
-use Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector;
-use Rector\PHPUnit\CodeQuality\Rector\Class_\AddSeeTestAnnotationRector;
-use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
-use Rector\PHPUnit\Set\PHPUnitLevelSetList;
-use Rector\PHPUnit\Set\PHPUnitSetList;
-use Rector\Set\ValueObject\LevelSetList;
-use Rector\Set\ValueObject\SetList;
+use Rector\ValueObject\PhpVersion;
 
-return static function (RectorConfig $config): void {
-    $config->cacheDirectory(__DIR__ . '/build/rector');
-    $config->importNames(true);
-    $config->phpstanConfig(__DIR__ . '/phpstan.neon');
-
-    $config->importShortClasses(false);
-    $config->paths([
-        __DIR__ . '/src',
-        __DIR__ . '/tests',
+return RectorConfig::configure()
+    ->withPhpVersion(PhpVersion::PHP_83)
+    ->withImportNames(importShortClasses: false)
+    ->withPHPStanConfigs([__DIR__ . '/phpstan.dist.neon'])
+    ->withCache(__DIR__ . '/build/rector')
+    ->withRootFiles()
+    ->withPaths([__DIR__ . '/src', __DIR__ . '/tests'])
+    ->withPhpSets(php83: true)
+    ->withPreparedSets(
+        deadCode: true,
+        codeQuality: true,
+        codingStyle: true,
+        typeDeclarations: true,
+        instanceOf: true,
+        strictBooleans: true,
+    )->withSkip([
+        FlipTypeControlToUseExclusiveTypeRector::class,
     ]);
-
-    $config->sets([
-        LevelSetList::UP_TO_PHP_83,
-        SetList::TYPE_DECLARATION,
-        SetList::CODE_QUALITY,
-        SetList::CODING_STYLE,
-        PHPUnitLevelSetList::UP_TO_PHPUNIT_100,
-        PHPUnitSetList::ANNOTATIONS_TO_ATTRIBUTES,
-        PHPUnitSetList::PHPUNIT_CODE_QUALITY,
-    ]);
-
-    $config->skip([
-        PreferPHPUnitThisCallRector::class,
-        AddSeeTestAnnotationRector::class,
-        InlineIfToExplicitIfRector::class,
-        AddLiteralSeparatorToNumberRector::class,
-    ]);
-};

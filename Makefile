@@ -4,8 +4,8 @@ app = docker compose run --rm app
 
 build:
 	@docker compose build --pull
-	@$(app) mkdir -p build
 	@$(app) composer install
+	@$(app) mkdir -p build
 
 .PHONY: clean
 clean:

@@ -24,7 +24,7 @@ RUN <<-EOF
     libsodium-dev \
     pkg-config \
     unzip \
-    vim \
+    vim-tiny \
     zip \
     zlib1g-dev;
   apt-get clean;
