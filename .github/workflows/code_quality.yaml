@@ -22,7 +22,7 @@ jobs:
         uses: ramsey/composer-install@v2
 
       - name: Run PHP_CodeSniffer
-        run: vendor/bin/phpcs
+        run: vendor/bin/phpcs --no-cache
 
   phpstan:
     name: PHP ${{ matrix.php }} - PHPStan
