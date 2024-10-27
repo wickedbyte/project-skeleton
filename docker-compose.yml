@@ -8,11 +8,16 @@ services:
       - type: bind
         source: ./
         target: /app
-        bind:
-          create_host_path: true
       - type: bind
         source: ./settings.ini
         target: /usr/local/etc/php/conf.d/settings.ini
       - type: tmpfs
         target: /tmp
     user: dev
+    env_file:
+      - .env
+    environment:
+      PHP_IDE_CONFIG: "serverName=cli" # Used by PhpStorm for path mapping
+      COMPOSER_AUTH: "{\"github-oauth\": {\"github.com\":\"${GITHUB_TOKEN}\"}}"
+    extra_hosts:
+      - host.docker.internal:host-gateway

@@ -1,6 +1,7 @@
 /.allowed-licenses          export-ignore
 /.editorconfig              export-ignore
 /.env                       export-ignore
+/.env.dist                  export-ignore
 /.env.example               export-ignore
 /.gitattributes             export-ignore
 /.github/                   export-ignore

@@ -4,8 +4,12 @@ app = docker compose run --rm app
 
 build:
 	@docker compose build --pull
-	@$(app) composer install
-	@$(app) mkdir -p build
+	@$(app) echo "Copying DIST Files (Overwrite Safe)" \
+		&& cp --no-clobber .env.example .env \
+		&& cp --no-clobber phpstan.dist.neon phpstan.neon \
+		&& cp --no-clobber phpunit.dist.xml phpunit.xml
+	$(app) mkdir --parents build
+	$(app) composer install
 
 .PHONY: clean
 clean:
