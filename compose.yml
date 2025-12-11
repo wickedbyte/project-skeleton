@@ -8,11 +8,6 @@ services:
       - type: bind
         source: ./
         target: /app
-      - type: bind
-        source: ./settings.ini
-        target: /usr/local/etc/php/conf.d/settings.ini
-      - type: tmpfs
-        target: /tmp
     user: dev
     env_file:
       - .env

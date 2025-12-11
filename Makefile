@@ -23,44 +23,26 @@ update: build
 .PHONY: upgrade
 upgrade: build
 	@$(app) composer require --dev --update-with-all-dependencies \
-		phpstan/phpstan \
-		phpunit/phpunit \
-		psy/psysh \
-		squizlabs/php_codesniffer \
-		slevomat/coding-standard \
-		rector/rector
+        "php-parallel-lint/php-parallel-lint" \
+        "phpstan/extension-installer" \
+        "phpstan/phpstan" \
+        "phpstan/phpstan-phpunit" \
+        "phpunit/phpunit" \
+        "psy/psysh" \
+        "rector/rector" \
+        "wickedbyte/coding-standard"
 	@$(app) composer require --update-with-all-dependencies \
-		symfony/console
+		"symfony/console"
 	@$(app) app composer bump
 
 .PHONY: bash
 bash: build
 	@$(app) bash
 
-.PHONY: phpunit
-phpunit: build
-	@$(app) composer phpunit
+.PHONY: lint phpcbf phpcs phpstan phpunit rector rector-dry-run
+lint phpcbf phpcs phpstan phpunit rector rector-dry-run:
+	docker compose run --rm --user=$$(id -u):$$(id -g) app composer run-script "$@"
 
-.PHONY: psysh
-psysh: build
-	@$(app) composer psysh
-
-.PHONY: phpcs
-phpcs: build
-	@$(app) composer phpcs
-
-.PHONY: phpcbf
-phpcbf: build
-	@$(app) composer phpcbf
-
-.PHONY: phpstan
-phpstan: build
-	@$(app) composer phpstan
-
-.PHONY: rector
-rector: build
-	@$(app) composer rector
-
+.NOTPARALLEL: ci
 .PHONY: ci
-ci: build
-	@$(app) composer ci
+ci: lint phpcs phpstan rector-dry-run phpunit

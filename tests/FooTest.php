@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use WickedByte\App\Foo;
 
 #[CoversClass(Foo::class)]
-class FooTest extends TestCase
+final class FooTest extends TestCase
 {
     #[Test]
     public function barReturns42(): void
