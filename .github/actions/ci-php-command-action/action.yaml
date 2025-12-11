@@ -14,6 +14,9 @@ inputs:
   command:
     description: "Vendor Script Command, e.g. php vendor/bin/phpstan analyse --no-progress"
     required: false
+  composer_command:
+    description: "If command is provided, this is run after composer install and before the (optional) command."
+    required: false
 runs:
   using: "composite"
   steps:
@@ -56,6 +59,19 @@ runs:
           --volume ${{ github.workspace }}:/app \
           composer:latest \
           composer install --no-interaction --no-progress --prefer-dist --optimize-autoloader
+
+    - name: Install Composer Dependencies
+      if: ${{ inputs.composer_command != '' }}
+      shell: bash
+      run: |
+        mkdir -p build/composer
+        docker run --rm \
+          --user="$(id -u):$(id -g)" \
+          --pull=missing \
+          --env COMPOSER_CACHE_DIR="build/composer" \
+          --volume ${{ github.workspace }}:/app \
+          composer:latest \
+          ${{ inputs.composer_command }}
 
     - if: ${{ inputs.cache != '' }}
       name: Make Command Cache Directory

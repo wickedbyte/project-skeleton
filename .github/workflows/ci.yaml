@@ -15,7 +15,7 @@ jobs:
       - uses: ./.github/actions/ci-php-command-action
         with:
           display: Composer
-          command: composer validate && composer audit
+          composer_command: composer validate && composer audit
 
   phpcs:
     name: PHP_CodeSniffer Code Style Check
