@@ -71,4 +71,4 @@ runs:
         --pull=missing \
         --volume ${{ github.workspace }}:/app \
           php:${{ inputs.php-version }}-cli-alpine \
-          ${{ inputs.command != '' }}
+          ${{ inputs.command }}
