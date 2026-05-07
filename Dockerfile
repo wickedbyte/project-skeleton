@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.4
 FROM php:8.5-cli as php
 WORKDIR /app
-ENV PATH "/app/bin:/app/vendor/bin:/app/build/composer/vendor/bin:$PATH"
-ENV COMPOSER_HOME "/app/build/composer"
+ENV PATH "/app/bin:/app/vendor/bin:/app/.cache/composer/vendor/bin:$PATH"
+ENV COMPOSER_HOME "/app/.cache/composer"
 ARG USER_UID=1000
 ARG USER_GID=1000
 
@@ -41,7 +41,7 @@ xdebug.mode=debug
 xdebug.client_host=host.docker.internal
 xdebug.start_with_request=trigger
 xdebug.idekey=PHPSTORM
-xdebug.output_dir=/app/build/xdebug
+xdebug.output_dir=/app/.cache/xdebug
 EOF
 
 USER dev

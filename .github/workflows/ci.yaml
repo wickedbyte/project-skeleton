@@ -27,7 +27,7 @@ jobs:
       - uses: ./.github/actions/ci-php-command-action
         with:
           display: PHP_CodeSniffer
-          cache: build
+          cache: .cache
           command: php vendor/bin/phpcs --parallel=$(nproc --ignore=2) --report=full
 
   phpstan:
@@ -40,7 +40,7 @@ jobs:
       - uses: ./.github/actions/ci-php-command-action
         with:
           display: PHPStan
-          cache: build/phpstan
+          cache: .cache/phpstan
           command: php vendor/bin/phpstan analyze --memory-limit=-1 --verbose --no-progress --no-interaction --no-ansi
 
   rector:
@@ -53,7 +53,7 @@ jobs:
       - uses: ./.github/actions/ci-php-command-action
         with:
           display: Rector
-          cache: build/rector
+          cache: .cache/rector
           command: php vendor/bin/rector process --dry-run --no-progress-bar --no-ansi
 
   linter:
@@ -70,8 +70,8 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           display: PHPUnit
-          cache: build/.phpunit.cache
-          command: php vendor/bin/parallel-lint -j $(nproc --ignore=2) --show-deprecated --exclude vendor --exclude build .
+          cache: .cache/.phpunit.cache
+          command: php vendor/bin/parallel-lint -j $(nproc --ignore=2) --show-deprecated --exclude vendor --exclude .cache .
 
   phpunit:
     name: PHPUnit Unit Tests - ${{ matrix.php }}
@@ -87,5 +87,5 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           display: PHPUnit
-          cache: build/.phpunit.cache
+          cache: .cache/.phpunit.cache
           command: php vendor/bin/phpunit --no-progress

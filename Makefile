@@ -2,26 +2,26 @@ SHELL := bash
 
 app = docker compose run --rm app
 
-build:
+.cache:
 	@docker compose build --pull
 	@$(app) echo "Copying DIST Files (Overwrite Safe)" \
 		&& cp --no-clobber .env.example .env \
 		&& cp --no-clobber phpstan.dist.neon phpstan.neon \
 		&& cp --no-clobber phpunit.dist.xml phpunit.xml
-	$(app) mkdir --parents build
+	$(app) mkdir --parents .cache
 	$(app) composer install
 
 .PHONY: clean
 clean:
-	@rm -rf ./build ./vendor
+	@rm -rf ./.cache ./vendor
 
 .PHONY: update
-update: build
+update: .cache
 	@$(app) composer update --with-all-dependencies
 	@$(app) composer bump
 
 .PHONY: upgrade
-upgrade: build
+upgrade: .cache
 	@$(app) composer require --dev --update-with-all-dependencies \
         "php-parallel-lint/php-parallel-lint" \
         "phpstan/extension-installer" \
@@ -36,7 +36,7 @@ upgrade: build
 	@$(app) app composer bump
 
 .PHONY: bash
-bash: build
+bash: .cache
 	@$(app) bash
 
 .PHONY: lint phpcbf phpcs phpstan phpunit rector rector-dry-run

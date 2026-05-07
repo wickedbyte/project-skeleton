@@ -9,7 +9,7 @@ inputs:
     description: "Vendor Script Name for Display, e.g. PHPUnit"
     required: false
   cache:
-    description: "Vendor Script Cache Path, e.g. build/phpstan"
+    description: "Vendor Script Cache Path, e.g. .cache/phpstan"
     required: false
   command:
     description: "Vendor Script Command, e.g. php vendor/bin/phpstan analyse --no-progress"
@@ -23,7 +23,7 @@ runs:
     - name: Set Up Build Cache for Composer
       uses: actions/cache@v4
       with:
-        path: build/composer
+        path: .cache/composer
         key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}-${{ hashFiles('**/composer.lock') }}-${{ github.run_id }}
         restore-keys: |
           ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}-${{ hashFiles('**/composer.lock') }}
@@ -51,11 +51,11 @@ runs:
     - name: Install Composer Dependencies
       shell: bash
       run: |
-        mkdir -p build/composer
+        mkdir -p .cache/composer
         docker run --rm \
           --user="$(id -u):$(id -g)" \
           --pull=missing \
-          --env COMPOSER_CACHE_DIR="build/composer" \
+          --env COMPOSER_CACHE_DIR=".cache/composer" \
           --volume ${{ github.workspace }}:/app \
           composer:latest \
           composer install --no-interaction --no-progress --prefer-dist --optimize-autoloader
@@ -64,11 +64,11 @@ runs:
       if: ${{ inputs.composer_command != '' }}
       shell: bash
       run: |
-        mkdir -p build/composer
+        mkdir -p .cache/composer
         docker run --rm \
           --user="$(id -u):$(id -g)" \
           --pull=missing \
-          --env COMPOSER_CACHE_DIR="build/composer" \
+          --env COMPOSER_CACHE_DIR=".cache/composer" \
           --volume ${{ github.workspace }}:/app \
           --workdir /app \
           composer:latest \

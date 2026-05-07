@@ -1,5 +1,6 @@
 /.aiignore                  export-ignore
 /.allowed-licenses          export-ignore
+/.cache                     export-ignore
 /.claude                    export-ignore
 /.cursor                    export-ignore
 /.dockerignore              export-ignore

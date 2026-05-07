@@ -37,7 +37,7 @@
         "ci:phpstan": "@phpstan --no-progress --no-interaction --no-ansi",
         "ci:phpunit": "@php vendor/bin/phpunit --no-interaction --no-progress",
         "ci:rector-dry-run": "@rector-dry-run --no-progress-bar --no-ansi",
-        "lint": "@php vendor/bin/parallel-lint -j $(nproc --ignore=2) --show-deprecated --exclude vendor --exclude build .",
+        "lint": "@php vendor/bin/parallel-lint -j $(nproc --ignore=2) --show-deprecated --exclude vendor --exclude .cache .",
         "phpcbf": "@php vendor/bin/phpcbf --parallel=$(nproc --ignore=2) --report=full",
         "phpcs": "@php vendor/bin/phpcs --parallel=$(nproc --ignore=2) --report=full",
         "phpstan": "@php vendor/bin/phpstan analyze --memory-limit=-1 --verbose",

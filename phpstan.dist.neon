@@ -1,6 +1,6 @@
 parameters:
     level: max
-    tmpDir: build/phpstan
+    tmpDir: .cache/phpstan
     paths:
         - src
         - tests

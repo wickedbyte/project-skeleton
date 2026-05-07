@@ -2,7 +2,7 @@
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
     <arg name="report" value="full"/>
-    <arg name="cache" value="build/phpcs"/>
+    <arg name="cache" value=".cache/phpcs"/>
     <arg name="extensions" value="php"/>
     <arg name="colors"/>
     <arg value="spw"/>
