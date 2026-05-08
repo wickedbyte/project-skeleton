@@ -1,59 +1,83 @@
 {
-    "name": "wickedbyte/project-skeleton",
-    "description": "Template for PHP Projects",
-    "type": "project",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Andy Snell",
-            "email": "andy@wickedbyte.com"
-        }
-    ],
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "phpstan/extension-installer": true
-        },
-        "sort-packages": true
-    },
-    "require": {
-        "php": "^8.5",
-        "symfony/console": "^8.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "WickedByte\\App\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "WickedByte\\Tests\\App\\": "tests/"
-        }
-    },
-    "scripts": {
-        "ci:lint": "@lint --no-progress --no-colors",
-        "ci:paratest": "@paratest --no-progress",
-        "ci:phpcs": "@phpcs",
-        "ci:phpstan": "@phpstan --no-progress --no-interaction --no-ansi",
-        "ci:phpunit": "@php vendor/bin/phpunit --no-interaction --no-progress",
-        "ci:rector-dry-run": "@rector-dry-run --no-progress-bar --no-ansi",
-        "lint": "@php vendor/bin/parallel-lint -j $(nproc --ignore=2) --show-deprecated --exclude vendor --exclude .cache .",
-        "phpcbf": "@php vendor/bin/phpcbf --parallel=$(nproc --ignore=2) --report=full",
-        "phpcs": "@php vendor/bin/phpcs --parallel=$(nproc --ignore=2) --report=full",
-        "phpstan": "@php vendor/bin/phpstan analyze --memory-limit=-1 --verbose",
-        "phpunit": "@php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-text",
-        "psysh": "@php vendor/bin/psysh",
-        "rector": "@php vendor/bin/rector process",
-        "rector-dry-run": "@php vendor/bin/rector process --dry-run"
-    },
-    "require-dev": {
-        "php-parallel-lint/php-parallel-lint": "^1.4",
-        "phpstan/extension-installer": "^1.4",
-        "phpstan/phpstan": "^2.1.33",
-        "phpstan/phpstan-phpunit": "^2.0.10",
-        "phpunit/phpunit": "^12.5.2",
-        "psy/psysh": "^0.12.16",
-        "rector/rector": "^2.2.14",
-        "wickedbyte/coding-standard": "^1.0.2"
+  "name": "wickedbyte/project-skeleton",
+  "description": "Template for PHP Projects",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andy Snell",
+      "email": "andy@wickedbyte.com"
     }
+  ],
+  "config": {
+    "allow-plugins": {
+      "phpstan/extension-installer": true
+    },
+    "bump-after-update": true,
+    "sort-packages": true
+  },
+  "require": {
+    "php": "^8.5",
+    "symfony/console": "^8.0.9"
+  },
+  "require-dev": {
+    "php-cs-fixer/shim": "^3.95.1",
+    "php-parallel-lint/php-parallel-lint": "^1.4",
+    "phpstan/extension-installer": "^1.4.3",
+    "phpstan/phpstan": "^2.1.54",
+    "phpstan/phpstan-phpunit": "^2.0.16",
+    "phpunit/phpunit": "^13.1.8",
+    "psy/psysh": "^0.12.22",
+    "rector/rector": "^2.4.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "WickedByte\\App\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "WickedByte\\Tests\\App\\": "tests/"
+    }
+  },
+  "scripts": {
+    "ci:lint": "@lint --no-progress --no-colors",
+    "ci:paratest": "@paratest --no-progress",
+    "ci:phpcs": "@phpcs",
+    "ci:phpstan": "@phpstan --no-progress --no-interaction --no-ansi",
+    "ci:phpunit": "@php vendor/bin/phpunit --no-interaction --no-progress",
+    "ci:prettier": "@prettier-check",
+    "ci:rector-dry-run": "@rector-dry-run --no-progress-bar --no-ansi",
+    "cs-check": [
+      "@putenv XDEBUG_MODE=off",
+      "@php vendor/bin/php-cs-fixer fix --dry-run --diff"
+    ],
+    "cs-fix": [
+      "@putenv XDEBUG_MODE=off",
+      "@php -d xdebug.mode=off vendor/bin/php-cs-fixer fix"
+    ],
+    "lint": [
+      "@putenv XDEBUG_MODE=off",
+      "@php vendor/bin/parallel-lint -j $(nproc) --show-deprecated --exclude vendor --exclude .cache ."
+    ],
+    "phpstan": [
+      "@putenv XDEBUG_MODE=off",
+      "@php vendor/bin/phpstan analyse --memory-limit=-1 --verbose"
+    ],
+    "phpunit": [
+      "@putenv XDEBUG_MODE=off",
+      "@php vendor/bin/phpunit"
+    ],
+    "prettier-check": "bunx prettier --check .",
+    "prettier-write": "bunx prettier --write .",
+    "psysh": "@php vendor/bin/psysh",
+    "rector": [
+      "@putenv XDEBUG_MODE=off",
+      "@php vendor/bin/rector process"
+    ],
+    "rector-dry-run": [
+      "@putenv XDEBUG_MODE=off",
+      "@php vendor/bin/rector process --dry-run"
+    ]
+  }
 }

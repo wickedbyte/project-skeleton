@@ -1,9 +1,11 @@
 # Ignore IDE, & AI Directories
 /.aiignore
+/.claude
 /.cursor
 /.idea
 /.junie
 /.phpstorm.meta.php
+/.remember
 /.run
 /.vscode
 
@@ -15,7 +17,6 @@
 /public/phpunit
 /vendor
 *.terraform
-coverage
 
 # Ignore environment files, except for the default distribution file
 .env

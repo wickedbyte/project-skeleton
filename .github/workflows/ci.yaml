@@ -17,8 +17,8 @@ jobs:
           display: Composer
           composer_command: composer validate && composer audit
 
-  phpcs:
-    name: PHP_CodeSniffer Code Style Check
+  cs-fixer:
+    name: PHP CS Fixer Code Style Check
     needs: composer
     runs-on: ubuntu-latest
     steps:
@@ -28,7 +28,7 @@ jobs:
         with:
           display: PHP_CodeSniffer
           cache: .cache
-          command: php vendor/bin/phpcs --parallel=$(nproc --ignore=2) --report=full
+          command: php vendor/bin/php-cs-fixer fix --dry-run --diff
 
   phpstan:
     name: PHPStan Static Analysis Check
@@ -61,7 +61,7 @@ jobs:
     needs: composer
     strategy:
       matrix:
-        php: [ '8.5' ]
+        php: ["8.5"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -78,7 +78,7 @@ jobs:
     needs: composer
     strategy:
       matrix:
-        php: [ '8.5' ]
+        php: ["8.5"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
