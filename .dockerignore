@@ -1,1 +1,19 @@
+##------------------------------------------------------------------------------
+# Docker Build Context Exclusions
+#
+# This template's Dockerfile bind-mounts the project at runtime (see compose.yml)
+# and never COPYs source files into the image, so the simplest correct .dockerignore
+# is to exclude everything — the build context stays minimal and image cache
+# invalidation is driven solely by Dockerfile contents.
+#
+# If you later add a stage that COPYs source (e.g. a production image),
+# replace the `**` line with the inversion pattern below to whitelist what
+# actually belongs in the build context:
+#
+#   *
+#   !/bin/
+#   !/composer.json
+#   !/composer.lock
+#   !/src/
+##------------------------------------------------------------------------------
 **

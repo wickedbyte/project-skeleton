@@ -18,7 +18,6 @@ return RectorConfig::configure()
     ->withImportNames(importShortClasses: false)
     ->withPHPStanConfigs([__DIR__ . '/phpstan.dist.neon'])
     ->withCache(__DIR__ . '/.cache/rector')
-    ->withRootFiles()
     ->withPaths([__DIR__ . '/src', __DIR__ . '/tests'])
     ->withPhpSets(php85: true)
     ->withPreparedSets(

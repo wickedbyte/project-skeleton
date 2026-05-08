@@ -1,9 +1,13 @@
+name: ${COMPOSE_PROJECT_NAME:-project-skeleton}
+
 services:
   php:
     build:
       context: ./
       dockerfile: Dockerfile
       target: php
+      args:
+        PHP_IMAGE_TAG: ${PHP_IMAGE_TAG:-8.5-cli}
     volumes:
       - type: bind
         source: ./
@@ -13,6 +17,10 @@ services:
       - .env
     environment:
       PHP_IDE_CONFIG: "serverName=cli" # Used by PhpStorm for path mapping
-      COMPOSER_AUTH: '{"github-oauth": {"github.com":"${GITHUB_TOKEN}"}}'
+      # Inherited from the calling environment when set (the Makefile exports
+      # COMPOSER_AUTH only when GITHUB_TOKEN is non-empty). When unset, this
+      # passes through as an empty value rather than a malformed JSON blob
+      # with an empty token, which Composer would warn about.
+      COMPOSER_AUTH: ${COMPOSER_AUTH:-}
     extra_hosts:
       - host.docker.internal:host-gateway

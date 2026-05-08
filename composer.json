@@ -41,9 +41,9 @@
     }
   },
   "scripts": {
+    "ci:cs-check": "@cs-check",
+    "ci:cs-fix": "@cs-fix",
     "ci:lint": "@lint --no-progress --no-colors",
-    "ci:paratest": "@paratest --no-progress",
-    "ci:phpcs": "@phpcs",
     "ci:phpstan": "@phpstan --no-progress --no-interaction --no-ansi",
     "ci:phpunit": "@php vendor/bin/phpunit --no-interaction --no-progress",
     "ci:prettier": "@prettier-check",
@@ -54,7 +54,7 @@
     ],
     "cs-fix": [
       "@putenv XDEBUG_MODE=off",
-      "@php -d xdebug.mode=off vendor/bin/php-cs-fixer fix"
+      "@php vendor/bin/php-cs-fixer fix"
     ],
     "lint": [
       "@putenv XDEBUG_MODE=off",
@@ -67,6 +67,10 @@
     "phpunit": [
       "@putenv XDEBUG_MODE=off",
       "@php vendor/bin/phpunit"
+    ],
+    "phpunit-coverage": [
+      "@putenv XDEBUG_MODE=coverage",
+      "@php vendor/bin/phpunit --coverage-html=/app/.cache/phpunit"
     ],
     "prettier-check": "bunx prettier --check .",
     "prettier-write": "bunx prettier --write .",

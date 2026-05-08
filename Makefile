@@ -37,8 +37,6 @@ export COMPOSER_AUTH ?= $(shell \
 	fi \
 )
 
-docker-php = docker compose run --rm php
-
 # Define behavior to safely source file (1) to dist file (2), without overwriting
 # if the dist file already exists. This is more portable than using `cp --no-clobber`.
 define copy-safe
@@ -66,27 +64,45 @@ CACHE_DIRS = $(CACHE_DIR)/.phpunit.cache \
 	$(CACHE_DIR)/docker \
 	$(CACHE_DIR)/phpstan \
 	$(CACHE_DIR)/phpunit \
-	$(CACHE_DIR)/psysh/config \
-	$(CACHE_DIR)/psysh/data \
-	$(CACHE_DIR)/psysh/tmp \
+	$(CACHE_DIR)/psysh \
 	$(CACHE_DIR)/rector \
 	$(CACHE_DIR)/xdebug
+
+##------------------------------------------------------------------------------
+# Self-Documenting Help Target
+#
+# Targets are documented inline by appending `## <description>` to the end of the
+# rule line. The `help` target below parses those annotations and prints them.
+##------------------------------------------------------------------------------
+
+.PHONY: help
+help: ## Show this help message and exit
+	@printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"
+	@awk 'BEGIN {FS = ":.*## "} \
+		/^[a-zA-Z_][a-zA-Z0-9_-]+:.*## / { printf "  \033[36m%-22s\033[0m %s\n", $$1, $$2 }' \
+		$(MAKEFILE_LIST) | sort
+	@printf "\n"
 
 ##------------------------------------------------------------------------------
 # Docker Targets
 ##------------------------------------------------------------------------------
 
-$(CACHE_DIR)/docker/docker-compose.json: Dockerfile compose.yml | $(CACHE_DIR)/docker
-	docker compose pull --quiet --policy="always"
+ifeq ($(shell uname -s),Darwin)
+  DOCKER_UID ?= 1000
+  DOCKER_GID ?= 1000
+else
+  DOCKER_UID ?= $(shell id -u)
+  DOCKER_GID ?= $(shell id -g)
+endif
+
+docker-php = docker compose run --rm $(if $(IS_TTY),--tty,--no-TTY) php
+
+$(CACHE_DIR)/docker/docker-compose.json: Dockerfile compose.yml | $(CACHE_DIR)/docker ## Build the project Docker image
 	COMPOSE_BAKE=true docker compose build \
 		--pull \
-		--build-arg USER_UID=$$(id -u) \
-		--build-arg USER_GID=$$(id -g)
+		--build-arg USER_UID=$(DOCKER_UID) \
+		--build-arg USER_GID=$(DOCKER_GID)
 	touch "$@" # required to consistently update the file mtime
-
-$(CACHE_DIR)/docker/carbon-migration-rector-rules-%.json: Dockerfile | $(CACHE_DIR)/docker
-	docker buildx build --target="$*" --pull --load --tag="carbon-migration-rector-rules-$*" --file Dockerfile .
-	docker image inspect "carbon-migration-rector-rules-$*" > "$@"
 
 ##------------------------------------------------------------------------------
 # Build/Setup/Teardown Targets
@@ -108,14 +124,14 @@ $(CACHE_DIR)/.install : vendor/autoload.php | $(CACHE_DIRS)
 	@touch "$(CACHE_DIR)/.install"
 
 .PHONY: upgrade
-upgrade : vendor/autoload.php
+upgrade: vendor/autoload.php ## Upgrade Composer runtime dependencies to their latest major versions
 	$(docker-php) composer require -W \
 		"symfony/console"
 	$(docker-php) composer bump
 	$(MAKE) upgrade-dev
 
 .PHONY: upgrade-dev
-upgrade-dev : vendor/autoload.php
+upgrade-dev: vendor/autoload.php ## Upgrade Composer dev dependencies to their latest major versions
 	$(docker-php) composer require --dev -W \
 		"php-cs-fixer/shim" \
 		"php-parallel-lint/php-parallel-lint" \
@@ -127,43 +143,60 @@ upgrade-dev : vendor/autoload.php
 		"rector/rector";
 	$(docker-php) composer bump --dev-only
 
+.PHONY: audit
+audit: vendor/autoload.php ## Run Composer security audit against installed dependencies
+	$(docker-php) composer audit
+
 .PHONY: clean
-clean:
-	$(docker-php) rm -rf "$(CACHE_DIR)" "./vendor"
+clean: ## Remove vendor/ and the .cache/ directory
+	rm -rf "$(CACHE_DIR)" "./vendor"
 
 ##------------------------------------------------------------------------------
 # Code Quality, Testing & Utility Targets
 ##------------------------------------------------------------------------------
 
 .PHONY: up
-up:
+up: ## Start the Docker Compose services in the background
 	docker compose up --detach
 
 .PHONY: down
-down:
+down: ## Stop the Docker Compose services
 	docker compose down --remove-orphans
 
 .PHONY: bash
-bash: $(CACHE_DIR)/docker/docker-compose.json
+bash: $(CACHE_DIR)/docker/docker-compose.json ## Open a bash shell inside the PHP container
 	$(docker-php) bash
 
+.PHONY: psysh
+psysh: $(CACHE_DIR)/.install ## Run the PsySH PHP REPL
+	$(docker-php) psysh
+
 .PHONY: test
-test: phpunit
+test: phpunit ## Alias for phpunit — run unit tests
 
 .PHONY: lint cs-check cs-fix phpstan phpunit phpunit-coverage rector rector-dry-run
-lint cs-check cs-fix phpstan phpunit phpunit-coverage rector rector-dry-run: $(CACHE_DIR)/.install
+lint:             $(CACHE_DIR)/.install ## Run the PHP syntax linter (parallel-lint)
+cs-check:         $(CACHE_DIR)/.install ## Check coding style with php-cs-fixer (no fixes)
+cs-fix:           $(CACHE_DIR)/.install ## Apply coding style fixes with php-cs-fixer
+phpstan:          $(CACHE_DIR)/.install ## Run PHPStan static analysis at level max
+phpunit:          $(CACHE_DIR)/.install ## Run unit tests with PHPUnit
+phpunit-coverage: $(CACHE_DIR)/.install ## Run unit tests and generate an HTML coverage report
+rector:           $(CACHE_DIR)/.install ## Apply Rector refactorings
+rector-dry-run:   $(CACHE_DIR)/.install ## Preview Rector refactorings without applying them
+lint cs-check cs-fix phpstan phpunit phpunit-coverage rector rector-dry-run:
 	$(docker-php) composer run-script "$@"
 
 .NOTPARALLEL: ci pre-ci preci
 .PHONY: ci pre-ci preci
-ci: lint cs-check phpstan phpunit prettier-check rector-dry-run
+ci: lint cs-check phpstan phpunit prettier-check rector-dry-run audit ## Run all CI checks
 
-pre-ci preci: prettier-write rector cs-fix ci
+pre-ci: prettier-write rector cs-fix ci ## Apply formatters/fixers, then run the full CI suite
+preci: pre-ci
 
 # Run the PHP development server to serve the HTML test coverage report on port 8000 by default
 COVERAGE_HTTP_PORT ?= 8000
 .PHONY: serve-coverage
-serve-coverage: vendor/autoload.php
+serve-coverage: vendor/autoload.php ## Serve the HTML coverage report on COVERAGE_HTTP_PORT (default 8000)
 	@docker compose run --rm --publish $(COVERAGE_HTTP_PORT):80 php php -S 0.0.0.0:80 -t /app/$(CACHE_DIR)/phpunit
 
 ##------------------------------------------------------------------------------

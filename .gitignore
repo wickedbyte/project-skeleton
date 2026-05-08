@@ -1,3 +1,7 @@
+# Ignore OS-Generated Metadata Files
+.DS_Store
+Thumbs.db
+
 # Ignore IDE, & AI Directories
 /.aiignore
 /.claude
@@ -13,10 +17,7 @@
 /.local
 /.cache
 /build
-/public/local
-/public/phpunit
 /vendor
-*.terraform
 
 # Ignore environment files, except for the default distribution file
 .env

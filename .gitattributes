@@ -1,3 +1,9 @@
+# Normalize line endings — store as LF in the repo, check out as LF on every platform
+* text=auto eol=lf
+
+# HTTP request files use CRLF per RFC 7230 (see also .editorconfig); opt out of normalization
+*.http                      -text
+
 /.aiignore                  export-ignore
 /.allowed-licenses          export-ignore
 /.claude                    export-ignore
@@ -33,7 +39,6 @@
 /codecov.yml                export-ignore
 /compose.yaml               export-ignore
 /compose.yml                export-ignore
-/composer.lock              export-ignore
 /conventional-commits.json  export-ignore
 /docker-compose.yaml        export-ignore
 /docker-compose.yml         export-ignore

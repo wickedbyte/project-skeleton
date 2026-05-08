@@ -18,7 +18,7 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked <<-EOF
   set -eux
   apt-get update;
   apt-get dist-upgrade --yes;
-  apt-get install ---yes --quiet --no-install-recommends \
+  apt-get install --yes --quiet --no-install-recommends \
     git \
     less \
     libzip-dev \
@@ -29,7 +29,6 @@ EOF
 # Install Composer
 ENV COMPOSER_HOME="/home/${USER_NAME}/.composer"
 ENV COMPOSER_CACHE_DIR="/app/.cache/composer"
-ENV COMPOSER_ROOT_VERSION="0.0.1"
 ENV PATH="/app/bin:/app/vendor/bin:${COMPOSER_HOME}/vendor/bin:${PATH}"
 COPY --link --from=composer /usr/bin/composer /usr/local/bin/composer
 COPY --link --from=composer --chown=$USER_UID:$USER_GID /tmp/* ${COMPOSER_HOME}/
@@ -55,11 +54,14 @@ COPY --link <<-EOF /usr/local/etc/php/conf.d/settings.ini
 	xdebug.output_dir=/app/.cache/xdebug
 EOF
 
-# Install Bun and Prettier
-# We have to create our own executable wrapper for prettier to ensure  that it
-# is run via `bun x`, otherwise, it fails with a missing Node error. Additionally,
-# note that we have to switch to the non-root user in order to install Prettier.
-# (This is why we create the wrapper before installing the actual binary.)
+# Install Bun and Prettier. Switching to the non-root user is required so
+# `bun add --global` installs into the user's bun home rather than root's.
 COPY --link --from=oven/bun:slim /usr/local/bin/bun /usr/local/bin/bunx /usr/local/bin/
+
 USER ${USER_NAME}
 RUN bun add --global --exact prettier
+
+# Point XDG-aware tools (PsySH in particular) at /app/.cache so their config,
+# history, and command-cache persist across container runs via the bind mount.
+ENV XDG_CONFIG_HOME=/app/.cache
+ENV XDG_DATA_HOME=/app/.cache
