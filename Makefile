@@ -22,8 +22,10 @@ _WARN := "\033[33m%s\033[0m %s\n"  # Yellow text template for "printf"
 _INFO := "\033[32m%s\033[0m %s\n" # Green text template for "printf"
 _ERROR := "\033[31m%s\033[0m %s\n" # Red text template for "printf"
 
-# Detect if we are in a TTY
-IS_TTY := $(shell [ -t 1 ] && echo 1 || echo 0)
+# Detect if we are in a TTY. Leave empty when stdout isn't a TTY so that Make's
+# $(if ...) picks the false branch — `$(if $(IS_TTY),...)` is truthy for any
+# non-empty string, including the literal "0", which silently breaks CI.
+IS_TTY := $(shell [ -t 1 ] && echo 1)
 
 ##------------------------------------------------------------------------------
 # Command Aliases & Function/Variable Definitions
